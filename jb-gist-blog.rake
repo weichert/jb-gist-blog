@@ -16,20 +16,18 @@ task :post do
     exit 1
   end
 
-  # TODO
-  # define dirname as posts+date+slug
-  # abort if directory exists (can reuse file.exist for this)
-  # generally abort without asking for the time being
-  filename = File.join(CONFIG['posts'], "#{date}-#{slug}.#{CONFIG['post_ext']}")
-  if File.exist?(filename)
-    abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
+  dirname = File.join(CONFIG['posts'], "#{date}-#{slug}")
+  tmpfilename = "#{dirname}/#{date}-#{slug}.#{CONFIG['post_ext']}"
+  if Dir.exist?(dirname)
+    abort("rake aborted! #{dirname} already exists")
   end
+  Dir.mkdir(dirname)
 
   # TODO
   # create gist with filename as filename
   # maybe use heredoc to create gist
-  puts "Creating new post: #{filename}"
-  open(filename, 'w') do |post|
+  puts "Creating new post: #{tmpfilename}"
+  open(tmpfilename, 'w') do |post|
     post.puts "---"
     post.puts "layout: post"
     post.puts "title: \"#{title.gsub(/-/,' ')}\""
