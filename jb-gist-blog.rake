@@ -1,7 +1,7 @@
 require 'jist'
 
 # Overriding a rake task might be a horrible thing to do so use this with caution!
-Rake::Task["post"].clear
+task :post => []; Rake::Task["post"].clear
 
 # Usage: rake post title="A Title" [date="2012-02-09"]
 desc "Begin a new post in #{CONFIG['posts']}"
