@@ -1,4 +1,4 @@
-require 'jist'
+require 'gist'
 
 # Overriding a rake task might be a horrible thing to do so use this with caution!
 task :post => []; Rake::Task["post"].clear
