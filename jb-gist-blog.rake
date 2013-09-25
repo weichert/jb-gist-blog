@@ -15,26 +15,22 @@ task :post do
     puts "Error - date format must be YYYY-MM-DD, please check you typed it correctly!"
     exit 1
   end
-
   dirname = File.join(CONFIG['posts'], "#{date}-#{slug}")
-  tmpfilename = "#{dirname}/#{date}-#{slug}.#{CONFIG['post_ext']}"
   if Dir.exist?(dirname)
     abort("rake aborted! #{dirname} already exists")
   end
-  Dir.mkdir(dirname)
-
-  # TODO
-  # create gist with filename as filename
-  # maybe use heredoc to create gist
-  puts "Creating new post: #{tmpfilename}"
-  open(tmpfilename, 'w') do |post|
-    post.puts "---"
-    post.puts "layout: post"
-    post.puts "title: \"#{title.gsub(/-/,' ')}\""
-    post.puts 'description: ""'
-    post.puts "category: "
-    post.puts "tags: []"
-    post.puts "---"
-    post.puts "{% include JB/setup %}"
-  end
+  filename = "#{date}-#{slug}.#{CONFIG['post_ext']}"
+  content = <<-END_OF_STRING
+---
+layout: post
+title: \"#{title.gsub(/-/,' ')}\"
+description: \"\"
+category:
+tags: []
+---
+{% include JB/setup %}"
+  END_OF_STRING
+  r = Gist.gist(content, :description => title, :filename => filename)
+  gitaddress = r["git_pull_url"]
+  system("git submodule add #{gitaddress} #{dirname}")
 end # task :post
