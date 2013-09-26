@@ -30,7 +30,7 @@ tags: []
 ---
 {% include JB/setup %}"
   END_OF_STRING
-  r = Gist.gist(content, :description => title, :filename => filename)
-  gitaddress = r["git_pull_url"]
-  system("git submodule add #{gitaddress} #{dirname}")
+  r = Gist.gist(content, :description => title, :filename => filename, :public => true)
+  gitaddress = r["html_url"]
+  system("git submodule add #{gitaddress}.git #{dirname}")
 end # task :post
